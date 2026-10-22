@@ -1,0 +1,19 @@
+{
+  "name": "atelier-todo",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Clean Minimalist & Editorial To-Do Application",
+  "main": "serve.js",
+  "scripts": {
+    "start": "node serve.js"
+  },
+  "keywords": [
+    "todo",
+    "minimalist",
+    "editorial",
+    "productivity",
+    "clean"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do — Editorial Task & Agenda</title>
+  <meta name="description"
+    content="A refined, editorial task manager designed for mindful productivity, clarity, and daily accomplishments.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans (Modern Geometric UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- Ambient Subtle Noise Overlay (Editorial Paper Texture) -->
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <!-- Celebration Canvas for Task Milestones -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <div class="atelier-wrapper">
+    <!-- Top Editorial Header & Masthead -->
+    <header class="atelier-header">
+      <div class="masthead-top">
+        <div class="brand-block">
+          <span class="brand-monogram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+          </span>
+          <span class="brand-title">To-Do</span>
+          <span class="brand-edition">EDITION NO. 04 &bull; AGENDA</span>
+        </div>
+
+        <div class="header-actions">
+          <div class="datetime-pill">
+            <span class="live-date" id="current-date">Thursday, Oct 22</span>
+            <span class="date-separator">&bull;</span>
+            <span class="live-time" id="current-time">12:00 PM</span>
+          </div>
+
+          <button id="theme-toggle-btn" class="icon-button" aria-label="Toggle visual theme"
+            title="Toggle theme (Light / Dark)">
+            <!-- Sun Icon -->
+            <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Moon Icon -->
+            <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <button id="backup-menu-btn" class="icon-button" aria-label="Data export and import" title="Backup & Restore">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Editorial Title & Daily Summary Banner -->
+      <div class="headline-container">
+        <div class="headline-text">
+          <h1 class="main-heading">Focus &amp; Intention.</h1>
+          <p class="sub-heading">Curated thoughts, meaningful projects, and quiet discipline.</p>
+        </div>
+
+        <!-- Sleek Radial Progress Card -->
+        <div class="progress-card">
+          <div class="progress-ring-container">
+            <svg class="progress-ring" width="68" height="68">
+              <circle class="progress-ring__circle-bg" stroke-width="5" fill="transparent" r="28" cx="34" cy="34" />
+              <circle id="progress-circle" class="progress-ring__circle" stroke-width="5" fill="transparent" r="28"
+                cx="34" cy="34" />
+            </svg>
+            <span class="progress-percentage" id="progress-percent">0%</span>
+          </div>
+          <div class="progress-meta">
+            <div class="progress-count-label"><span id="completed-count">0</span> of <span id="total-count">0</span>
+              Complete</div>
+            <div class="progress-status-caption" id="progress-status-text">Ready to begin</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Quick Task Creator / Compose Section -->
+    <section class="composer-section" aria-label="Task creation">
+      <form id="task-form" class="composer-card">
+        <div class="composer-main-row">
+          <div class="composer-input-wrapper">
+            <input type="text" id="task-title-input" class="composer-title-input"
+              placeholder="What needs your attention today?..." required autocomplete="off">
+          </div>
+          <button type="submit" class="composer-submit-btn" id="add-task-btn" title="Add Task (Enter)">
+            <span>Add Task</span>
+            <kbd class="key-hint">↵</kbd>
+          </button>
+        </div>
+
+        <!-- Optional Expanded Notes -->
+        <div class="composer-notes-container" id="composer-notes-wrapper">
+          <textarea id="task-notes-input" class="composer-notes-input"
+            placeholder="Add details, links, or notes (optional)..." rows="2"></textarea>
+        </div>
+
+        <!-- Task Metadata Pickers (Category, Priority, Due Date) -->
+        <div class="composer-meta-row">
+          <div class="meta-field-group">
+            <label for="task-category-select" class="meta-label">Category</label>
+            <div class="select-wrapper">
+              <select id="task-category-select" class="meta-select">
+                <option value="Work">💼 Work</option>
+                <option value="Personal">🌿 Personal</option>
+                <option value="Creative">✨ Creative</option>
+                <option value="Health">🧘 Wellness</option>
+                <option value="Reading">📖 Reading</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="meta-field-group">
+            <label for="task-priority-select" class="meta-label">Priority</label>
+            <div class="select-wrapper">
+              <select id="task-priority-select" class="meta-select">
+                <option value="urgent">🔴 Urgent</option>
+                <option value="high">🟠 High</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="low">🟢 Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="meta-field-group">
+            <label for="task-due-date-input" class="meta-label">Due Date</label>
+            <div class="date-input-wrapper">
+              <input type="date" id="task-due-date-input" class="meta-date-input">
+            </div>
+          </div>
+
+          <div class="quick-date-chips">
+            <button type="button" class="date-chip" data-days="0">Today</button>
+            <button type="button" class="date-chip" data-days="1">Tomorrow</button>
+            <button type="button" class="date-chip" data-days="7">Next Week</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Toolbar: Search, Category Filters, Status & Sort -->
+    <section class="toolbar-section" aria-label="Task controls">
+      <div class="toolbar-search-row">
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" class="search-input"
+            placeholder="Search tasks, notes, or tags... (Press / to focus)" autocomplete="off">
+          <button type="button" id="search-clear-btn" class="search-clear-btn" aria-label="Clear search"
+            style="display: none;">&times;</button>
+        </div>
+
+        <div class="sort-wrapper">
+          <label for="sort-select" class="sort-label">Sort:</label>
+          <select id="sort-select" class="sort-select">
+            <option value="priority-desc">Priority (High &rarr; Low)</option>
+            <option value="due-asc">Due Date (Earliest first)</option>
+            <option value="created-desc" selected>Recently Added</option>
+            <option value="alpha-asc">Alphabetical (A &rarr; Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toolbar-filters-row">
+        <!-- Status Tabs: All, Active, Completed -->
+        <nav class="status-tabs" aria-label="Status filter">
+          <button class="status-tab active" data-status="all">
+            All <span class="tab-badge" id="tab-count-all">0</span>
+          </button>
+          <button class="status-tab" data-status="active">
+            Active <span class="tab-badge" id="tab-count-active">0</span>
+          </button>
+          <button class="status-tab" data-status="completed">
+            Completed <span class="tab-badge" id="tab-count-completed">0</span>
+          </button>
+        </nav>
+
+        <!-- Category Pills Filter -->
+        <div class="category-pills" id="category-pills-container">
+          <button class="category-pill active" data-category="all">All Tags</button>
+          <button class="category-pill" data-category="Work">Work</button>
+          <button class="category-pill" data-category="Personal">Personal</button>
+          <button class="category-pill" data-category="Creative">Creative</button>
+          <button class="category-pill" data-category="Health">Wellness</button>
+          <button class="category-pill" data-category="Reading">Reading</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Tasks Stream Area -->
+    <main class="tasks-main-area" id="tasks-container" aria-live="polite">
+      <!-- Pinned section dynamically rendered if any pinned tasks -->
+      <div id="pinned-tasks-group" class="tasks-group" style="display: none;">
+        <div class="group-header">
+          <span class="group-pin-icon">★</span>
+          <span class="group-title">Pinned Priorities</span>
+          <span class="group-rule"></span>
+        </div>
+        <ul id="pinned-tasks-list" class="tasks-list"></ul>
+      </div>
+
+      <!-- Standard tasks list -->
+      <div id="standard-tasks-group" class="tasks-group">
+        <div class="group-header" id="standard-tasks-header" style="display: none;">
+          <span class="group-title">Agenda</span>
+          <span class="group-rule"></span>
+        </div>
+        <ul id="tasks-list" class="tasks-list"></ul>
+      </div>
+
+      <!-- Completed tasks section with collapsible toggle -->
+      <div id="completed-tasks-group" class="tasks-group" style="display: none;">
+        <div class="group-header">
+          <span class="group-title">Archive &amp; Completed</span>
+          <span class="group-rule"></span>
+          <button type="button" id="clear-completed-btn" class="clear-action-btn">Clear All</button>
+        </div>
+        <ul id="completed-tasks-list" class="tasks-list completed-style"></ul>
+      </div>
+
+      <!-- Empty State View -->
+      <div id="empty-state" class="empty-state-card" style="display: none;">
+        <div class="empty-icon-wrap">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <h3 class="empty-heading">A Clean Slate.</h3>
+        <p class="empty-description" id="empty-message">No tasks match your current criteria. Create a new task or take
+          a mindful pause.</p>
+      </div>
+    </main>
+
+    <!-- Footer Colophon -->
+    <footer class="atelier-footer">
+      <div class="footer-left">
+        <span class="footer-quote">“Simplicity is the ultimate sophistication.”</span>
+      </div>
+      <div class="footer-right">
+        <span class="storage-indicator">● Local Auto-Saved</span>
+        <button id="quick-seed-btn" class="text-link-btn" title="Load curated sample agenda">Reset Sample Data</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Edit Task Modal Dialog -->
+  <div id="edit-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-labelledby="modal-edit-title">
+      <div class="modal-header">
+        <h3 id="modal-edit-title" class="modal-title">Refine Agenda Item</h3>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="edit-task-form" class="modal-body">
+        <input type="hidden" id="edit-task-id">
+
+        <div class="form-group">
+          <label for="edit-task-title" class="form-label">Task Title</label>
+          <input type="text" id="edit-task-title" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-task-notes" class="form-label">Notes &amp; Details</label>
+          <textarea id="edit-task-notes" class="form-textarea" rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-task-category" class="form-label">Category</label>
+            <select id="edit-task-category" class="form-select">
+              <option value="Work">💼 Work</option>
+              <option value="Personal">🌿 Personal</option>
+              <option value="Creative">✨ Creative</option>
+              <option value="Health">🧘 Wellness</option>
+              <option value="Reading">📖 Reading</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-task-priority" class="form-label">Priority</label>
+            <select id="edit-task-priority" class="form-select">
+              <option value="urgent">🔴 Urgent</option>
+              <option value="high">🟠 High</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-task-due-date" class="form-label">Due Date</label>
+          <input type="date" id="edit-task-due-date" class="form-input">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Backup & Export/Import Modal -->
+  <div id="backup-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-labelledby="modal-backup-title">
+      <div class="modal-header">
+        <h3 id="modal-backup-title" class="modal-title">Data Backup &amp; Portability</h3>
+        <button type="button" class="modal-close-btn" id="backup-modal-close-btn"
+          aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">All your agenda items are securely stored on this browser's local device storage. You can
+          export a JSON backup or import an existing file at any time.</p>
+
+        <div class="backup-actions-grid">
+          <div class="backup-action-card">
+            <h4>Export Agenda</h4>
+            <p>Download a pristine JSON file containing all your tasks, priorities, and archives.</p>
+            <button type="button" id="export-json-btn" class="btn-secondary">Download JSON</button>
+          </div>
+
+          <div class="backup-action-card">
+            <h4>Import Agenda</h4>
+            <p>Upload a previously exported JSON backup to restore your agenda.</p>
+            <label class="btn-secondary file-upload-btn">
+              Select File
+              <input type="file" id="import-json-file" accept=".json" style="display: none;">
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification with Undo Action -->
+  <div id="toast" class="toast-notification" role="status" aria-live="polite">
+    <span id="toast-message" class="toast-message">Task updated</span>
+    <button type="button" id="toast-undo-btn" class="toast-undo-btn" style="display: none;">Undo</button>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/confetti.js"></script>
+  <script type="module" src="js/store.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
